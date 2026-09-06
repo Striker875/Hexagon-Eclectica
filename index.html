@@ -301,7 +301,7 @@ async function rpc(fn,params={}){
 async function diagnose(){
   const lines=[];
   lines.push("SB_URL: "+SB_URL);
-  lines.push("Ключ вставлен: "+(SB_KEY&&!SB_KEY.includes("ВСТАВЬТЕ")?"да":"НЕТ — вставьте anon key в код!");
+  lines.push("Ключ вставлен: "+(SB_KEY&&!SB_KEY.includes("ВСТАВЬТЕ")?"да":"НЕТ — вставьте anon key в код!"));
   lines.push("Режим: "+(cloud?"работа с базой":"локальный (база не подключена)"));
   if(!cloud) return lines.join("\n");
   try{
