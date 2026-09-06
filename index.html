@@ -168,7 +168,7 @@ footer{border-top:1px solid var(--line);background:#0a0608;position:relative;z-i
 .mtabs{display:flex;gap:8px;margin-bottom:22px}
 .mtabs button{flex:1;background:none;border:1px solid var(--line);color:var(--mut);font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:11px 6px;cursor:pointer;transition:.25s}
 .mtabs button.act{border-color:var(--red);color:#fff;background:rgba(229,17,43,.12)}
-.mbox .field{margin-bottom:13px}.merr{color:var(--red2);font-size:12.5px;min-height:20px;margin-top:8px;font-family:var(--mono)}
+.mbox .field{margin-bottom:13px}.merr{color:var(--red2);font-size:12px;min-height:20px;margin-top:8px;font-family:var(--mono);white-space:pre-wrap}
 .mnote{font-family:var(--mono);font-size:10px;color:var(--mut);line-height:1.8;margin-top:14px;letter-spacing:.04em}
 #apanel{position:fixed;top:0;right:-540px;width:min(520px,96vw);height:100dvh;background:#0c0709;border-left:1px solid var(--red);z-index:210;transition:right .4s cubic-bezier(.7,0,.3,1);display:flex;flex-direction:column;box-shadow:-30px 0 80px rgba(0,0,0,.6)}
 #apanel.open{right:0}
@@ -189,7 +189,7 @@ footer{border-top:1px solid var(--line);background:#0a0608;position:relative;z-i
 .hint{font-family:var(--mono);font-size:10.5px;color:var(--mut);line-height:1.8;border:1px dashed var(--line);padding:14px;margin-top:18px}
 .urow{border:1px solid var(--line);padding:14px 16px;margin-bottom:10px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;background:rgba(16,10,13,.5)}
 .urow b{font-family:var(--mono);font-size:13px}
-.urow .rd,.rd{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--red2);border:1px solid var(--line);padding:3px 8px}
+.urow .rd,.rd{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--red2);border:1px solid var(--line);padding:3px 8px;white-space:nowrap}
 .urow .ud{font-size:11.5px;color:var(--mut);width:100%}
 #fab{position:fixed;right:22px;bottom:22px;z-index:150;width:62px;height:62px;background:var(--red);border:none;cursor:pointer;color:#fff;font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);display:none;align-items:center;justify-content:center;transition:.3s;box-shadow:0 10px 34px rgba(229,17,43,.4)}
 #fab:hover{background:var(--red2);transform:scale(1.08)}#fab.vis{display:flex}
@@ -234,7 +234,10 @@ footer{border-top:1px solid var(--line);background:#0a0608;position:relative;z-i
   <div id="mLogin"><h3>Служебный и гражданский доступ</h3><div class="msub">Форма 07-А · защищённый контур</div>
     <div class="field"><label>Логин</label><input id="lgL" autocomplete="username"></div>
     <div class="field"><label>Пароль</label><input id="lgP" type="password" autocomplete="current-password"></div>
-    <button class="btn" style="width:100%" id="lgBtn">Войти</button><div class="merr" id="lgErr"></div></div>
+    <button class="btn" style="width:100%" id="lgBtn">Войти</button>
+    <button class="btn ghost sm" style="width:100%;margin-top:10px" id="diagBtn">⚙ Диагностика соединения</button>
+    <pre id="diagOut" style="display:none;white-space:pre-wrap;font-family:var(--mono);font-size:10px;color:var(--mut);border:1px dashed var(--line);padding:10px;margin-top:10px;max-height:200px;overflow:auto"></pre>
+    <div class="merr" id="lgErr"></div></div>
   <div id="mReg" style="display:none"><h3>Регистрация гражданина</h3><div class="msub">Учётная запись для кабинета и обращений</div>
     <div class="field"><label>Имя (будет в кабинете)</label><input id="rgD"></div>
     <div class="field"><label>Логин (латиница, 3–24)</label><input id="rgL" autocomplete="username"></div>
@@ -268,7 +271,8 @@ const DEFAULT_DATA = {
     {id:"skrg",abbr:"СКРГ",name:"Служба Контроля Рождаемости Гексагона",status:"ДЕЙСТВУЕТ",desc:"Демографический учёт, регистрационные процедуры и программы поддержки рождаемости.",full:"Служба Контроля Рождаемости Гексагона ведёт демографический учёт, регистрирует семьи и рождения, реализует программы поддержки и следит за соблюдением демографического баланса.",functions:["Демографический учёт и баланс","Регистрация семей и рождений","Программы поддержки рождаемости","Выдача разрешений и квот","Мониторинг демографических показателей"]},
     {id:"skoog",abbr:"СКООГ",name:"Служба Контроля Оборота Оружия Гексагона",status:"ДЕЙСТВУЕТ",desc:"Лицензирование, реестр вооружений и инспекции оборота оружия.",full:"Служба Контроля Оборота Оружия Гексагона ведёт единый реестр вооружений, выдаёт и аннулирует лицензии, проводит инспекции мест хранения и учитывает служебные образцы.",functions:["Лицензирование оборота оружия","Единый реестр вооружений","Инспекции и проверки хранения","Аннулирование лицензий и изъятие","Учёт служебных образцов"]},
     {id:"sksvg",abbr:"СКСВГ",name:"Служба Контроля Социальных Выплат Гексагона",status:"ДЕЙСТВУЕТ",desc:"Назначение, верификация и контроль социальных выплат и пособий.",full:"Служба Контроля Социальных Выплат Гексагона назначает и верифицирует выплаты, ведёт единый реестр получателей и обеспечивает перечисление средств в эклектах в установленном порядке.",functions:["Назначение и верификация выплат","Единый реестр получателей","Перечисление средств в эклектах","Адресная поддержка граждан","Контроль целевого расходования"]},
-    {id:"skmng",abbr:"СКМНГ",name:"Служба Контроля Миграции Населения Гексагона",status:"ДЕЙСТВУЕТ",desc:"Миграционный контроль: регистрация, транзит и внутренние перемещения.",full:"Служба Контроля Миграции Населения Гексагона регистрирует прибывающих, выдаёт виды на проживание, ведёт учёт внутренних перемещений и регулирует миграционные коридоры.",functions:["Регистрация прибывающих","Выдача видов на проживание","Учёт внутренних перемещений","Миграционные коридоры и квоты","Контроль транзитных потоков"]}
+    {id:"skmng",abbr:"СКМНГ",name:"Служба Контроля Миграции Населения Гексагона",status:"ДЕЙСТВУЕТ",desc:"Миграционный контроль: регистрация, транзит и внутренние перемещения.",full:"Служба Контроля Миграции Населения Гексагона регистрирует прибывающих, выдаёт виды на проживание, ведёт учёт внутренних перемещений и регулирует миграционные коридоры.",functions:["Регистрация прибывающих","Выдача видов на проживание","Учёт внутренних перемещений","Миграционные коридоры и квоты","Контроль транзитных потоков"]},
+    {id:"smpg",abbr:"СМПГ",name:"Служба Медицинской Помощи Гексагона",status:"ДЕЙСТВУЕТ",desc:"Медицинская помощь, санитарный надзор и охрана здоровья граждан Гексагона.",full:"Служба Медицинской Помощи Гексагона обеспечивает гражданам доступ к передовой медицине, организует санитарный надзор, экстренную и плановую помощь, а также ведёт учёт медицинских учреждений и специалистов.",functions:["Организация медицинской помощи","Санитарно-эпидемиологический надзор","Экстренная и плановая помощь","Учёт медицинских учреждений","Программы охраны здоровья граждан"]}
   ]
 };
 const LS_DRAFT="hexDraft_v1", LS_CREDS="hexCreds_v1";
@@ -280,25 +284,60 @@ const clone=o=>structuredClone(o);
 function mergeData(base,j){ if(!j) return base; return {meta:{...base.meta,...(j.meta||{})}, laws:j.laws||base.laws, orgs:j.orgs||base.orgs}; }
 function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),3400); }
 async function rpc(fn,params={}){
-  const r=await fetch(SB_URL+"/rest/v1/rpc/"+fn,{method:"POST",headers:{"Content-Type":"application/json","apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY},body:JSON.stringify(params)});
-  if(!r.ok) throw new Error("rpc:"+fn); return await r.json();
+  let r;
+  try{
+    r=await fetch(SB_URL+"/rest/v1/rpc/"+fn,{method:"POST",
+      headers:{"Content-Type":"application/json","apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY},
+      body:JSON.stringify(params)});
+  }catch(net){ throw new Error("сеть недоступна / неверный SB_URL (нет ответа от сервера)"); }
+  let txt=""; try{ txt=await r.text(); }catch(e){}
+  let data; try{ data=txt?JSON.parse(txt):{}; }catch(e){ data={message:txt}; }
+  if(!r.ok){
+    const msg=(data&&(data.message||data.msg||data.details||data.hint))||txt;
+    throw new Error("HTTP "+r.status+": "+String(msg).slice(0,220));
+  }
+  return data;
+}
+async function diagnose(){
+  const lines=[];
+  lines.push("SB_URL: "+SB_URL);
+  lines.push("Ключ вставлен: "+(SB_KEY&&!SB_KEY.includes("ВСТАВЬТЕ")?"да":"НЕТ — вставьте anon key в код!");
+  lines.push("Режим: "+(cloud?"работа с базой":"локальный (база не подключена)"));
+  if(!cloud) return lines.join("\n");
+  try{
+    const r=await fetch(SB_URL+"/rest/v1/rpc/get_content",{method:"POST",headers:{"Content-Type":"application/json","apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY},body:"{}"});
+    const t=await r.text();
+    lines.push("Чтение get_content: HTTP "+r.status+" "+t.slice(0,100));
+    if(r.status===404) lines.push("→ функция get_content не найдена: выполните сводный SQL-скрипт.");
+  }catch(e){ lines.push("Чтение get_content: СЕТЬ — "+e.message); }
+  try{
+    const r=await fetch(SB_URL+"/rest/v1/rpc/try_login",{method:"POST",headers:{"Content-Type":"application/json","apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY},body:JSON.stringify({p_username:"__diag__",p_pass:"__diag__"})});
+    const t=await r.text();
+    lines.push("Вход try_login: HTTP "+r.status+" "+t.slice(0,160));
+    if(r.status===404) lines.push("→ функция try_login не найдена: выполните сводный SQL-скрипт.");
+    if(r.status===200&&t.indexOf("Неверный логин")>=0) lines.push("→ база и функции работают. Проверьте логин/пароль.");
+    if(t.indexOf("crypt")>=0) lines.push("→ не хватает pgcrypto: выполните сводный SQL-скрипт.");
+    if(r.status===401||r.status===403) lines.push("→ неверный ключ: проверьте anon key.");
+  }catch(e){ lines.push("Вход try_login: СЕТЬ — "+e.message); lines.push("→ проект мог быть приостановлен (пауза бесплатного тарифа) или указан неверный URL."); }
+  return lines.join("\n");
 }
 function creds(){try{const c=JSON.parse(localStorage.getItem(LS_CREDS));if(c&&c.l&&c.p)return c;}catch(e){}return{l:"admin",p:"Gexagon13000"};}
 function loadSES(){try{SES=JSON.parse(sessionStorage.getItem("hexSES"));}catch(e){SES=null}}
 function saveSES(){SES?sessionStorage.setItem("hexSES",JSON.stringify(SES)):sessionStorage.removeItem("hexSES");}
 async function initData(){
   let base=clone(DEFAULT_DATA);
-  if(cloud){ try{ const d=await rpc("get_content"); if(d&&(d.orgs||d.meta||d.laws)) base=mergeData(base,d); }catch(e){ toast("Нет связи с базой данных"); } }
+  if(cloud){ try{ const d=await rpc("get_content"); if(d&&(d.orgs||d.meta||d.laws)) base=mergeData(base,d); }catch(e){ console.warn("initData:",e.message); } }
   else { try{ const j=JSON.parse(localStorage.getItem(LS_DRAFT)); if(j) base=mergeData(base,j); }catch(e){} }
   DATA=base;
 }
 async function publish(){
   if(!SES) return toast("Нет доступа");
-  if(cloud){ try{ const r=await rpc("save_content",{t:SES.token,doc:DATA}); toast(r.ok?"Опубликовано для всех посетителей":"Ошибка: "+(r.error||"неизвестно")); }catch(e){ toast("Ошибка сети"); } }
+  if(cloud){ try{ const r=await rpc("save_content",{t:SES.token,doc:DATA}); toast(r.ok?"Опубликовано для всех посетителей":"Ошибка: "+(r.error||"неизвестно")); }catch(e){ toast("Ошибка публикации: "+e.message); } }
   else { localStorage.setItem(LS_DRAFT,JSON.stringify(DATA)); toast("Черновик сохранён (локальный режим)"); }
   route(); buildFoot();
 }
 const orgById=id=>DATA.orgs.find(o=>o.id===id);
+function orgAbbr(id){ if(!id) return "Общее"; const o=DATA.orgs.find(x=>x.id===id); return o?o.abbr:id; }
 function heroEmblem(){return `<div class="em-wrap"><div class="goo"><div class="drop d1"></div><div class="drop d2"></div><div class="drop d3"></div><div class="drop d4"></div></div><svg class="emblem" viewBox="0 0 200 200"><g class="spin"><polygon points="100,10 177.9,55 177.9,145 100,190 22.1,145 22.1,55" fill="none" stroke="#e5112b" stroke-width="2.5"/></g><g class="spinr"><circle cx="100" cy="100" r="80" fill="none" stroke="rgba(229,17,43,.4)" stroke-width="1" stroke-dasharray="4 10"/></g><polygon points="100,38 153.7,69 153.7,131 100,162 46.3,131 46.3,69" fill="rgba(229,17,43,.07)" stroke="#e5112b" stroke-width="1.5"/><line x1="100" y1="38" x2="100" y2="162" stroke="rgba(229,17,43,.45)" stroke-width="1"/><line x1="46.3" y1="100" x2="153.7" y2="100" stroke="rgba(229,17,43,.45)" stroke-width="1"/><circle cx="100" cy="100" r="26" fill="#0c0709" stroke="#e5112b" stroke-width="2"/><text x="100" y="107" text-anchor="middle" font-family="Unbounded" font-size="16" font-weight="800" fill="#fff">ГЭ</text></svg></div>`;}
 function tickerHtml(){ const items=DATA.meta.ticker.map(t=>`<span>${esc(t)}</span><i>◆</i>`).join(""); return `<div class="ticker"><div class="tk-track">${items}${items}</div></div>`; }
 function shead(ovl,h,note=""){ return `<div class="shead rv"><div><div class="ovl">${ovl}</div><h2>${h}</h2></div>${note?`<div class="note">${note}</div>`:""}</div>`; }
@@ -312,7 +351,8 @@ const GUIDE=[
   {q:"Оборот оружия и лицензии",org:"skoog"},
   {q:"Социальные выплаты и пособия",org:"sksvg"},
   {q:"Миграция и регистрационный учёт",org:"skmng"},
-  {q:"Рождаемость и демографические программы",org:"skrg"}
+  {q:"Рождаемость и демографические программы",org:"skrg"},
+  {q:"Медицинская помощь и здравоохранение",org:"smpg"}
 ];
 function guideTile(g){ const o=orgById(g.org); if(!o) return "";
   return `<div class="gtile rv" onclick="location.hash='#/org/${o.id}'">${g.main?'<span class="chip">Прямое направление</span>':(g.note?`<span class="chip">${esc(g.note)}</span>`:"")}<div class="q">${esc(g.q)}</div><div class="ar">▼ направляется в ▼</div><div class="ans">${esc(o.abbr)} — ${esc(o.name)}</div></div>`; }
@@ -321,7 +361,7 @@ function converterHtml(){ return `<div class="conv rv"><h3>⬡ Официаль�
 function capitalCard(){ return `<div class="ccard rv on"><div class="cc">Столица · Гипеллоза</div><h3 class="jsCapTime capBig">--:--:--</h3><p><span class="jsCapDate" style="color:#fff"></span><br>Часовой пояс: <b>Гипеллоза (бывш. Барнаул)</b>, UTC+7</p></div>`; }
 function hero(){ return `<div class="hero"><div class="wrap hero-g"><div class="rv on"><div class="ovl">Государственный портал · Гексагон-Эклектика</div><h1 class="big">ГЕКСаГОН-<br><em>ЭКЛЕКТИКА</em></h1><p class="sub"><b>Гексагон-Эклектика</b> — государство монаршего суверенитета и общенародного распределения, учредитель Слободско Гексагонского Союза наряду с <b>Фриландором</b>. Столица — <b>Гипеллоза</b>. Все ведомства, реестры и службы — в едином контуре.</p><div class="hbtns"><a class="btn" href="#/orgs">Структура государства</a><a class="btn ghost" href="#/guide">Куда обращаться</a></div><div class="hstats"><div><b>${pad2(DATA.orgs.length)}</b><span>Ведомств</span></div><div><b>02</b><span>Государства Союза</span></div><div><b>${DATA.laws.length}</b><span>Актов в ГРЗ</span></div><div><b>24/7</b><span>Приём обращений</span></div></div></div>${heroEmblem()}</div></div>`; }
 function unionSection(){ return `<section><div class="wrap">${shead("Раздел II","Государства Союза","Слободско Гексагонский Союз")}<div class="cgrid"><div class="ccard rv"><div class="cc">Государство-член · 01</div><h3>ГЕКСаГОН-ЭКЛЕКТИКА</h3><p>Форма правления: <b>монархия и общенародное распределение</b><br>Столица: <b>Гипеллоза</b><br>Валюты: <b>гекс, эклект</b><br>Технологический уклад: <b>высший</b></p></div><div class="ccard rv"><div class="cc">Государство-член · 02</div><h3>ФРИЛАНДОР</h3><p>Форма правления: <b>демократия</b><br>Валюта: <b>фарт</b><br>Курс: <b>1 эклект = 51,4 фарт</b></p></div></div><div class="commun rv"><span class="tag">СГС</span><p>Слободско Гексагонский Союз — надгосударственное объединение Гексагона-Эклектики и Фриландора. Союз ведёт общие дела государств-членов и не подменяет собой государственные органы ни одной из сторон.</p></div></div></section>`; }
-function renderHome(){ return `${hero()}${tickerHtml()}<div class="wrap"><div class="commun rv"><span class="tag">Коммюнике</span><p>${esc(DATA.meta.announcement)}</p></div></div><section><div class="wrap">${shead("Раздел I","Структура государства",`Ведомств в реестре: ${pad2(DATA.orgs.length)}`)}<div class="ogrid">${DATA.orgs.map((o,i)=>orgCard(o,i)).join("")}</div></div></section>${unionSection()}<section><div class="wrap">${shead("Раздел III","Куда обращаться","Службы розыска равноправны: СРСГС не выше СРГ")}<div class="gtiles">${GUIDE.slice(0,3).map(guideTile).join("")}</div><div style="margin-top:26px" class="rv"><a class="btn ghost" href="#/guide">Полный справочник направлений ⟶</a></div></div></section><section><div class="wrap">${shead("Раздел IV","Валютная система","Гексагон-Эклектика и Фриландор")}${currencyCards()}${converterHtml()}</div></section><section><div class="wrap">${shead("Раздел V","Приёмная государства","Форма 12-Г")}<div class="appeal rv"><div><h3>Обращение гражданина</h3><p>Обращения регистрируются автоматически и направляются в профильное ведомство. Зарегистрированные граждане отслеживают статус в кабинете.</p></div><div id="apBox"><form class="aform" id="appealForm"><input placeholder="Имя заявителя" required><input placeholder="Предмет обращения" required><textarea placeholder="Текст обращения" required></textarea><button class="btn">Зарегистрировать обращение</button></form></div></div></div></section>`; }
+function renderHome(){ return `${hero()}${tickerHtml()}<div class="wrap"><div class="commun rv"><span class="tag">Коммюнике</span><p>${esc(DATA.meta.announcement)}</p></div></div><section><div class="wrap">${shead("Раздел I","Структура государства",`Ведомств в реестре: ${pad2(DATA.orgs.length)}`)}<div class="ogrid">${DATA.orgs.map((o,i)=>orgCard(o,i)).join("")}</div></div></section>${unionSection()}<section><div class="wrap">${shead("Раздел III","Куда обращаться","Службы розыска равноправны: СРСГС не выше СРГ")}<div class="gtiles">${GUIDE.slice(0,3).map(guideTile).join("")}</div><div style="margin-top:26px" class="rv"><a class="btn ghost" href="#/guide">Полный справочник направлений ⟶</a></div></div></section><section><div class="wrap">${shead("Раздел IV","Валютная система","Гексагон-Эклектика и Фриландор")}${currencyCards()}${converterHtml()}</div></section><section><div class="wrap">${shead("Раздел V","Приёмная государства","Общее обращение · Форма 12-Г")}<div class="appeal rv"><div><h3>Обращение гражданина</h3><p>Обращение регистрируется и направляется в Канцелярию. Чтобы направить обращение в конкретное ведомство — откройте его страницу.</p></div><div id="apBox"><form class="aform" id="appealForm"><input placeholder="Имя заявителя" required><input placeholder="Предмет обращения" required><textarea placeholder="Текст обращения" required></textarea><button class="btn">Зарегистрировать обращение</button></form></div></div></div></section>`; }
 function renderOrgs(){ return `<section><div class="wrap">${shead("Реестр ведомств","Структура государства","Гексагон-Эклектика")}<div class="searchbar rv"><input id="orgSearch" placeholder="Поиск по аббревиатуре или наименованию…"></div><div class="ogrid" id="orgGrid">${DATA.orgs.map((o,i)=>orgCard(o,i)).join("")}</div></div></section>`; }
 function renderGuide(){ return `<section><div class="wrap">${shead("Справочник","Куда обращаться","СРСГС и СРГ — равноправные службы, без подчинения")}<div class="gtiles">${GUIDE.map(guideTile).join("")}</div></div></section>`; }
 function renderCurrency(){ return `<section><div class="wrap">${shead("Валютная система","Гекс, Эклект и Фарт","Курсы установлены в порядке СГС")}${currencyCards()}${converterHtml()}<div class="commun rv" style="margin-top:18px"><span class="tag">Регламент</span><p>Все ведомственные расчёты Гексагон-Эклектики ведутся в эклектах; гекс применяется для резервных и межведомственных операций. Фарт — официальная валюта Фриландора; соотношение 1 эклект = 51,4 фарт установлено в порядке СГС.</p></div></div></section>`; }
@@ -329,17 +369,26 @@ function renderOrg(id){
   const i=DATA.orgs.findIndex(o=>o.id===id); if(i<0) return renderHome();
   const o=DATA.orgs[i], prev=DATA.orgs[(i-1+DATA.orgs.length)%DATA.orgs.length], next=DATA.orgs[(i+1)%DATA.orgs.length];
   const laws=o.id==="grz"?`<div class="shead rv" style="margin-top:44px"><div><div class="ovl">Публикации</div><h2 style="font-size:22px">Действующие акты</h2></div></div><div class="laws">${DATA.laws.map(l=>{const p=l.split("|");return `<div class="law rv"><b>${esc(p[0]||"")}</b><span>${esc(p[1]||l)}</span></div>`}).join("")}</div>`:"";
-  return `<div class="obanner"><div class="wm">${esc(o.abbr)}</div><div class="wrap"><div class="ocrumb"><a href="#/">Главная</a> / <a href="#/orgs">Ведомства</a> / ${esc(o.abbr)}</div><div class="oabbr rv on">${esc(o.abbr)}</div><h1 class="rv on">${esc(o.name)}</h1><span class="ochip">⬡ ${esc(o.status)}</span></div></div><div class="wrap obody"><div><p class="rv on" style="font-size:16.5px;color:#d8cdd0;margin-bottom:36px">${esc(o.full)}</p><div class="shead rv"><div><div class="ovl">Регламент</div><h2 style="font-size:22px">Полномочия и функции</h2></div></div><ul class="ofuncs">${(o.functions||[]).map(f=>`<li class="rv">${esc(f)}</li>`).join("")}</ul>${laws}<div class="opn"><a href="#/org/${prev.id}">⟵ ${esc(prev.abbr)}</a><a href="#/org/${next.id}">${esc(next.abbr)} ⟶</a></div></div><div class="oreg rv"><div><b>Код ведомства</b><span>ВЕД-${pad2(i+1)}/ГЭ</span></div><div><b>Приёмные часы</b><span>Пн–Сб · 08:00–20:00</span></div><div><b>Канцелярия</b><span>Форма ${pad2(i+1)}-К · общий порядок</span></div><div><b>Юрисдикция</b><span>${o.id==="sgs"?"Государства Союза":"Гексагон-Эклектика"}</span></div><a class="btn sm" href="#/guide" style="justify-content:center">Куда обращаться</a></div></div>`;
+  const appealBlock=`<section><div class="wrap">${shead("Приёмная","Направить обращение в "+esc(o.abbr),"Адресная форма 12-Г")}
+    <div class="appeal rv"><div><h3>Обращение в ${esc(o.name)}</h3><p>Обращение будет направлено непосредственно в ${esc(o.abbr)} и попадёт в ведомственный кабинет службы.</p></div>
+    <div class="orgApWrap"><form class="aform" data-orgappeal="${esc(o.id)}">
+      <input placeholder="Имя заявителя" required ${SES?`value="${esc(SES.display_name||"")}"`:""}>
+      <input placeholder="Предмет обращения" required>
+      <textarea placeholder="Текст обращения" required></textarea>
+      <button class="btn">Направить в ${esc(o.abbr)}</button>
+    </form></div></div></div></section>`;
+  return `<div class="obanner"><div class="wm">${esc(o.abbr)}</div><div class="wrap"><div class="ocrumb"><a href="#/">Главная</a> / <a href="#/orgs">Ведомства</a> / ${esc(o.abbr)}</div><div class="oabbr rv on">${esc(o.abbr)}</div><h1 class="rv on">${esc(o.name)}</h1><span class="ochip">⬡ ${esc(o.status)}</span></div></div><div class="wrap obody"><div><p class="rv on" style="font-size:16.5px;color:#d8cdd0;margin-bottom:36px">${esc(o.full)}</p><div class="shead rv"><div><div class="ovl">Регламент</div><h2 style="font-size:22px">Полномочия и функции</h2></div></div><ul class="ofuncs">${(o.functions||[]).map(f=>`<li class="rv">${esc(f)}</li>`).join("")}</ul>${laws}<div class="opn"><a href="#/org/${prev.id}">⟵ ${esc(prev.abbr)}</a><a href="#/org/${next.id}">${esc(next.abbr)} ⟶</a></div></div><div class="oreg rv"><div><b>Код ведомства</b><span>ВЕД-${pad2(i+1)}/ГЭ</span></div><div><b>Приёмные часы</b><span>Пн–Сб · 08:00–20:00</span></div><div><b>Канцелярия</b><span>Форма ${pad2(i+1)}-К · общий порядок</span></div><div><b>Юрисдикция</b><span>${o.id==="sgs"?"Государства Союза":"Гексагон-Эклектика"}</span></div><a class="btn sm" href="#/guide" style="justify-content:center">Куда обращаться</a></div></div>${appealBlock}`;
 }
 function renderCabinet(){
   if(!SES) return `<section><div class="wrap">${shead("Кабинет","Доступ не выполнен")}<div class="rv"><p style="color:var(--mut);margin-bottom:20px">Для доступа к кабинету войдите или зарегистрируйтесь как гражданин.</p><button class="btn" onclick="openAuth('login')">Войти или зарегистрироваться</button></div></div></section>`;
   const rn={admin:"Верховная Канцелярия",official:"Должностное лицо",citizen:"Гражданин"};
   const isStaff=SES.role!=="citizen";
-  const statusCard=`<div class="ccard rv on"><div class="cc">Статус</div><h3>${rn[SES.role]||SES.role}</h3><p>Учётная запись: <b>${esc(SES.display_name||SES.username)}</b><br>Уровень доступа: <b>${SES.role==="admin"?"полный":SES.role==="official"?"служебный (контент)":"гражданский"}</b></p>${isStaff?`<div style="margin-top:18px"><button class="btn sm" onclick="openPanel()">Открыть Канцелярию</button></div>`:""}</div>`;
+  const orgLine=(SES.org_id&&isStaff)?`<br>Ведомство: <b>${esc(orgAbbr(SES.org_id))}</b>`:"";
+  const statusCard=`<div class="ccard rv on"><div class="cc">Статус</div><h3>${rn[SES.role]||SES.role}</h3><p>Учётная запись: <b>${esc(SES.display_name||SES.username)}</b>${orgLine}<br>Уровень доступа: <b>${SES.role==="admin"?"полный":SES.role==="official"?"ведомственный":"гражданский"}</b></p>${isStaff?`<div style="margin-top:18px"><button class="btn sm" onclick="openPanel()">Открыть Канцелярию</button></div>`:""}</div>`;
   let body;
   if(isStaff){
     body=`<div class="cgrid">${statusCard}${capitalCard()}</div>
-    <div class="shead rv" style="margin-top:12px"><div><div class="ovl">Служебный контур</div><h2 style="font-size:22px">Входящие обращения</h2></div><div class="note">Все обращения граждан · смена статуса</div></div>
+    <div class="shead rv" style="margin-top:12px"><div><div class="ovl">Служебный контур</div><h2 style="font-size:22px">Входящие обращения</h2></div><div class="note">${SES.role==="admin"?"все ведомства":"ваше ведомство и общие"}</div></div>
     <div id="inAppeals" class="laws"><div class="law"><span>Загрузка…</span></div></div>`;
   } else {
     body=`<div class="cgrid">${statusCard}${capitalCard()}</div>
@@ -377,23 +426,31 @@ function bindLocal(){
   const s=document.getElementById("orgSearch");
   if(s) s.addEventListener("input",()=>{const q=s.value.toLowerCase();document.querySelectorAll("#orgGrid .ocard").forEach(c=>c.style.display=c.textContent.toLowerCase().includes(q)?"":"none");});
   const af=document.getElementById("appealForm");
-  if(af) af.addEventListener("submit",async e=>{e.preventDefault();const i=af.querySelectorAll("input,textarea");const ref=await submitAppeal(i[0].value,i[1].value,i[2].value);document.getElementById("apBox").innerHTML=`<div class="okbox">Обращение зарегистрировано.<br>Присвоен номер:<b>${esc(ref)}</b></div>`;});
+  if(af) af.addEventListener("submit",async e=>{e.preventDefault();const i=af.querySelectorAll("input,textarea");const ref=await submitAppeal(i[0].value,i[1].value,i[2].value,null);document.getElementById("apBox").innerHTML=`<div class="okbox">Обращение зарегистрировано.<br>Присвоен номер:<b>${esc(ref)}</b></div>`;});
   const ca=document.getElementById("cabAppeal");
-  if(ca) ca.addEventListener("submit",async e=>{e.preventDefault();const i=ca.querySelectorAll("input,textarea");const ref=await submitAppeal(i[0].value,i[1].value,i[2].value);ca.innerHTML=`<div class="okbox">Обращение зарегистрировано.<br>Присвоен номер:<b>${esc(ref)}</b></div>`;loadMyAppeals();});
+  if(ca) ca.addEventListener("submit",async e=>{e.preventDefault();const i=ca.querySelectorAll("input,textarea");const ref=await submitAppeal(i[0].value,i[1].value,i[2].value,null);ca.innerHTML=`<div class="okbox">Обращение зарегистрировано.<br>Присвоен номер:<b>${esc(ref)}</b></div>`;loadMyAppeals();});
+  document.querySelectorAll(".orgApWrap form").forEach(f=>{
+    f.addEventListener("submit",async e=>{e.preventDefault();
+      const orgId=f.dataset.orgappeal;
+      const i=f.querySelectorAll("input,textarea");
+      const ref=await submitAppeal(i[0].value,i[1].value,i[2].value,orgId);
+      f.parentElement.innerHTML=`<div class="okbox">Обращение направлено в ${esc(orgAbbr(orgId))}.<br>Присвоен номер:<b>${esc(ref)}</b></div>`;
+    });
+  });
   if(location.hash==="#/cabinet"&&SES){ if(SES.role==="citizen") loadMyAppeals(); else loadIncomingAppeals(); }
 }
 const RUB={hex:17264000,ecl:1328,fart:1328/51.4,rub:1};
 function convert(){ const amt=parseFloat(document.getElementById("cvAmt").value)||0; const rub=amt*RUB[document.getElementById("cvCur").value];
   document.getElementById("rHex").textContent=fmt(rub/RUB.hex); document.getElementById("rEcl").textContent=fmt(rub/RUB.ecl);
   document.getElementById("rFart").textContent=fmt(rub/RUB.fart); document.getElementById("rRub").textContent=fmt(rub); }
-async function submitAppeal(name,subject,body){
-  if(cloud){ try{ const r=await rpc("submit_appeal",{p_name:name,p_subject:subject,p_body:body,p_citizen:(SES&&SES.role==="citizen")?SES.username:null}); return r.ok?r.ref:"ГЭ-ОШИБКА"; }catch(e){ return "ГЭ-ОШИБКА-СЕТИ"; } }
+async function submitAppeal(name,subject,body,target){
+  if(cloud){ try{ const r=await rpc("submit_appeal",{p_name:name,p_subject:subject,p_body:body,p_citizen:(SES&&SES.role==="citizen")?SES.username:null,p_target:target||null}); return r.ok?r.ref:"ГЭ-ОШИБКА"; }catch(e){ return "ГЭ-ОШИБКА"; } }
   return "ГЭ-"+new Date().getFullYear()+"-"+Math.floor(100000+Math.random()*899999);
 }
 async function loadMyAppeals(){
   const box=document.getElementById("myAppeals"); if(!box||!SES) return;
   try{ const r=await rpc("my_appeals",{t:SES.token}); const list=r.appeals||[];
-    box.innerHTML=list.length?list.map(a=>`<div class="law"><b>${esc(a.ref)}</b><span>${esc(a.subject)} · <i style="color:var(--red2);font-style:normal">${esc(a.status||"Принято")}</i></span></div>`).join(""):`<div class="law"><span>Обращений пока нет.</span></div>`;
+    box.innerHTML=list.length?list.map(a=>`<div class="law"><b>${esc(a.ref)}</b><span>${esc(a.subject)} · ${esc(orgAbbr(a.target_org))} · <i style="color:var(--red2);font-style:normal">${esc(a.status||"Принято")}</i></span></div>`).join(""):`<div class="law"><span>Обращений пока нет.</span></div>`;
   }catch(e){ box.innerHTML=`<div class="law"><span>Не удалось загрузить реестр.</span></div>`; }
 }
 async function loadIncomingAppeals(){
@@ -404,7 +461,7 @@ async function loadIncomingAppeals(){
     if(!list.length){ box.innerHTML=`<div class="law"><span>Входящих обращений нет.</span></div>`; return; }
     box.innerHTML=list.map(a=>`<div class="law" style="flex-direction:column;align-items:stretch;gap:10px">
       <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
-        <b>${esc(a.ref)}</b><span class="rd">${esc(a.citizen_username||"гость")}</span>
+        <b>${esc(a.ref)}</b><span class="rd">${esc(orgAbbr(a.target_org))}</span><span class="rd">${esc(a.citizen_username||"гость")}</span>
         <span style="color:var(--mut);font-size:12px">${new Date(a.created_at).toLocaleString("ru-RU")}</span>
         <select class="stSel" data-id="${a.id}" style="margin-left:auto">${["Принято","В работе","Завершено","Отклонено"].map(s=>`<option ${a.status===s?"selected":""}>${s}</option>`).join("")}</select>
       </div>
@@ -433,12 +490,13 @@ document.querySelectorAll(".mtabs button").forEach(b=>b.onclick=()=>switchAuthTa
 authModal.addEventListener("click",e=>{if(e.target===authModal)authModal.classList.remove("open")});
 document.getElementById("svcEntry").onclick=()=>SES?(location.hash="#/cabinet"):openAuth("login");
 document.getElementById("authBtn").onclick=()=>SES?(location.hash="#/cabinet"):openAuth("login");
+document.getElementById("diagBtn").onclick=async()=>{ const o=document.getElementById("diagOut"); o.style.display="block"; o.textContent="Проверка…"; try{ o.textContent=await diagnose(); }catch(e){ o.textContent="Сбой диагностики: "+e.message; } };
 async function doLogin(){
   const u=document.getElementById("lgL").value.trim(), p=document.getElementById("lgP").value, err=document.getElementById("lgErr"); err.textContent="";
   if(cloud){ try{ const r=await rpc("try_login",{p_username:u,p_pass:p});
-      if(r.ok){ SES={token:r.token,role:r.role,username:r.username,display_name:r.display_name}; saveSES(); afterAuth(); } else err.textContent=r.error||"Ошибка входа";
-    }catch(e){ err.textContent="Нет связи с базой данных"; } }
-  else { const c=creds(); if(u===c.l&&p===c.p){ SES={token:"local",role:"admin",username:u,display_name:"Канцелярия"}; saveSES(); afterAuth(); } else err.textContent="Неверный логин или пароль"; }
+      if(r.ok){ SES={token:r.token,role:r.role,username:r.username,display_name:r.display_name,org_id:r.org_id||null}; saveSES(); afterAuth(); } else err.textContent=r.error||"Ошибка входа";
+    }catch(e){ console.error(e); err.textContent="СБОЙ: "+e.message+"\nНажмите «Диагностика соединения» для подробностей."; } }
+  else { const c=creds(); if(u===c.l&&p===c.p){ SES={token:"local",role:"admin",username:u,display_name:"Канцелярия",org_id:null}; saveSES(); afterAuth(); } else err.textContent="Неверный логин или пароль"; }
 }
 async function doRegister(){
   const d=document.getElementById("rgD").value.trim(), l=document.getElementById("rgL").value.trim(), p=document.getElementById("rgP").value, p2=document.getElementById("rgP2").value, err=document.getElementById("rgErr"); err.textContent="";
@@ -447,10 +505,10 @@ async function doRegister(){
   try{ const r=await rpc("register_citizen",{p_username:l,p_pass:p,p_display:d});
     if(!r.ok){ err.textContent=r.error; return; }
     const lr=await rpc("try_login",{p_username:l,p_pass:p});
-    if(lr.ok){ SES={token:lr.token,role:lr.role,username:lr.username,display_name:lr.display_name}; saveSES(); afterAuth(); location.hash="#/cabinet"; }
-  }catch(e){ err.textContent="Нет связи с базой данных"; }
+    if(lr.ok){ SES={token:lr.token,role:lr.role,username:lr.username,display_name:lr.display_name,org_id:lr.org_id||null}; saveSES(); afterAuth(); location.hash="#/cabinet"; }
+  }catch(e){ console.error(e); err.textContent="СБОЙ: "+e.message+"\nНажмите «Диагностика соединения» для подробностей."; }
 }
-function afterAuth(){ authModal.classList.remove("open"); updateAuthUI(); toast("Доступ разрешён · "+(SES.display_name||SES.username)); if(SES.role==="citizen"){} }
+function afterAuth(){ authModal.classList.remove("open"); updateAuthUI(); toast("Доступ разрешён · "+(SES.display_name||SES.username)); }
 async function doLogout(){ if(cloud&&SES&&SES.token!=="local"){ try{await rpc("logout",{t:SES.token});}catch(e){} } SES=null; saveSES(); updateAuthUI(); panel.classList.remove("open"); route(); }
 function updateAuthUI(){ document.getElementById("authBtn").textContent=SES?("⬡ "+SES.username):"Вход"; document.getElementById("fab").classList.toggle("vis",!!SES&&SES.role!=="citizen"); }
 const panel=document.getElementById("apanel");
@@ -471,11 +529,11 @@ function setTab(t){ document.querySelectorAll("#apTabs button").forEach(b=>b.cla
   if(t==="users"){ body.innerHTML=tabUsersShell(); loadUsers(); } if(t==="settings") body.innerHTML=tabSettings(); }
 function tabOrgs(){ return `<button class="btn sm" id="addOrg" style="margin-bottom:18px">+ Добавить ведомство</button>${DATA.orgs.map(o=>`<div class="aorg" data-id="${o.id}"><div class="aorg-top"><b>${esc(o.abbr)}</b><span>${esc(o.name)}</span></div><form class="aform2" data-org="${o.id}" style="display:none"><div class="field"><label>Аббревиатура</label><input name="abbr" value="${esc(o.abbr)}"></div><div class="field"><label>Полное наименование</label><input name="name" value="${esc(o.name)}"></div><div class="field"><label>Краткое описание</label><textarea name="desc" rows="2">${esc(o.desc)}</textarea></div><div class="field"><label>Полный текст</label><textarea name="full" rows="4">${esc(o.full)}</textarea></div><div class="field"><label>Полномочия (по одному в строке)</label><textarea name="funcs" rows="5">${(o.functions||[]).map(esc).join("\n")}</textarea></div><div class="field"><label>Статус</label><select name="status">${["ДЕЙСТВУЕТ","НА РЕОРГАНИЗАЦИИ","ЗАКРЫТО"].map(s=>`<option ${o.status===s?"selected":""}>${s}</option>`).join("")}</select></div><div class="arow"><button class="btn sm">Сохранить и опубликовать</button><button type="button" class="btn dngr sm del">Удалить</button></div></form></div>`).join("")}`; }
 function tabContent(){ return `<form id="metaForm" style="display:grid;gap:14px"><div class="field"><label>Коммюнике (на главной)</label><textarea name="ann" rows="3">${esc(DATA.meta.announcement)}</textarea></div><div class="field"><label>Бегущая строка (по одной на строку)</label><textarea name="tick" rows="5">${DATA.meta.ticker.map(esc).join("\n")}</textarea></div><div class="field"><label>Акты ГРЗ (формат: номер | название)</label><textarea name="laws" rows="6">${DATA.laws.map(esc).join("\n")}</textarea></div><button class="btn sm">Сохранить и опубликовать</button></form><div class="hint">${cloud?"Публикация мгновенно видна всем посетителям портала.":"ВНИМАНИЕ: база не подключена — правки сохраняются только в вашем браузере (локальный режим). Вставьте SB_URL и SB_KEY в коде."}</div>`; }
-function tabUsersShell(){ return `<form id="uForm" style="display:grid;gap:12px;border:1px solid var(--line);padding:18px;margin-bottom:20px"><div class="field"><label>Логин (латиница, 3–24)</label><input name="ul"></div><div class="field"><label>Пароль (мин. 6)</label><input name="up" type="password"></div><div class="field"><label>Отображаемое имя</label><input name="ud"></div><div class="field"><label>Роль</label><select name="ur"><option value="official">Должностное лицо — правит контент</option><option value="citizen">Гражданин</option><option value="admin">Верховная Канцелярия — полный доступ</option></select></div><button class="btn sm">Создать аккаунт</button></form><div id="uList" class="hint">Загрузка…</div>`; }
+function tabUsersShell(){ return `<form id="uForm" style="display:grid;gap:12px;border:1px solid var(--line);padding:18px;margin-bottom:20px"><div class="field"><label>Логин (латиница, 3–24)</label><input name="ul"></div><div class="field"><label>Пароль (мин. 6)</label><input name="up" type="password"></div><div class="field"><label>Отображаемое имя</label><input name="ud"></div><div class="field"><label>Роль</label><select name="ur"><option value="official">Должностное лицо — видит обращения своего ведомства</option><option value="citizen">Гражданин</option><option value="admin">Верховная Канцелярия — полный доступ</option></select></div><div class="field"><label>Ведомство (для должностных лиц)</label><select name="uorg"><option value="">— не привязывать (видит все обращения) —</option>${DATA.orgs.map(o=>`<option value="${esc(o.id)}">${esc(o.abbr)} — ${esc(o.name)}</option>`).join("")}</select></div><button class="btn sm">Создать аккаунт</button></form><div id="uList" class="hint">Загрузка…</div>`; }
 async function loadUsers(){ const box=document.getElementById("uList"); if(!box)return;
   try{ const r=await rpc("list_users",{t:SES.token}); if(!r.ok){ box.textContent=r.error; return; }
     const rn={admin:"Верховная Канцелярия",official:"Должностное лицо",citizen:"Гражданин"};
-    box.innerHTML=r.users.map(u=>`<div class="urow" data-u="${esc(u.username)}"><div style="display:flex;gap:12px;align-items:center"><b>${esc(u.username)}</b><span class="rd">${rn[u.role]||u.role}</span></div><div class="arow"><button class="btn ghost sm rpass">Сброс пароля</button>${u.username!==SES.username?'<button class="btn dngr sm udel">Удалить</button>':""}</div><div class="ud">${esc(u.display_name||"—")} · создан ${new Date(u.created_at).toLocaleDateString("ru-RU")}</div></div>`).join("");
+    box.innerHTML=r.users.map(u=>`<div class="urow" data-u="${esc(u.username)}"><div style="display:flex;gap:12px;align-items:center"><b>${esc(u.username)}</b><span class="rd">${rn[u.role]||u.role}</span></div><div class="arow"><button class="btn ghost sm rpass">Сброс пароля</button>${u.username!==SES.username?'<button class="btn dngr sm udel">Удалить</button>':""}</div><div class="ud">${esc(u.display_name||"—")} · ${u.org_id?("ведомство: "+esc(orgAbbr(u.org_id))):"все ведомства"} · создан ${new Date(u.created_at).toLocaleDateString("ru-RU")}</div></div>`).join("");
   }catch(e){ box.textContent="Ошибка сети"; } }
 function tabSettings(){ return `<form id="credForm" style="display:grid;gap:14px"><div class="field"><label>Старый пароль</label><input name="old" type="password"></div><div class="field"><label>Новый пароль (мин. 6)</label><input name="new" type="password"></div><button class="btn sm">Сменить свой пароль</button></form><div class="arow" style="margin-top:20px"><button class="btn ghost sm" id="expBtn">Экспорт данных (резерв)</button><label class="btn ghost sm" style="cursor:pointer">Импорт данных<input type="file" id="impFile" accept=".json" hidden></label></div><div class="arow" style="margin-top:12px"><button class="btn dngr sm" id="logout">Выйти из канцелярии</button></div><div class="hint">Режим: ${cloud?"база данных подключена · правки публикуются для всех":"локальный режим · подключите Supabase"}<br>Экспорт/импорт — резервное копирование содержимого портала.</div>`; }
 const apBody=document.getElementById("apBody");
@@ -499,7 +557,7 @@ apBody.addEventListener("submit",async e=>{
   if(f.id==="credForm"){ const d=new FormData(f);
     if(cloud){ try{ const r=await rpc("change_my_password",{t:SES.token,p_old:d.get("old"),p_new:d.get("new")}); toast(r.ok?"Пароль изменён":(r.error||"Ошибка")); }catch(e2){ toast("Ошибка сети"); } }
     else { localStorage.setItem(LS_CREDS,JSON.stringify({l:SES.username,p:d.get("new")})); toast("Пароль изменён (локально)"); } }
-  if(f.id==="uForm"){ const d=new FormData(f); try{ const r=await rpc("create_user",{t:SES.token,p_username:d.get("ul"),p_pass:d.get("up"),p_role:d.get("ur"),p_display:d.get("ud")}); toast(r.ok?"Аккаунт создан":(r.error||"Ошибка")); if(r.ok){f.reset();loadUsers();} }catch(e2){ toast("Ошибка сети"); } }
+  if(f.id==="uForm"){ const d=new FormData(f); try{ const r=await rpc("create_user",{t:SES.token,p_username:d.get("ul"),p_pass:d.get("up"),p_role:d.get("ur"),p_display:d.get("ud"),p_org:d.get("uorg")||null}); toast(r.ok?"Аккаунт создан":(r.error||"Ошибка")); if(r.ok){f.reset();loadUsers();} }catch(e2){ toast("Ошибка сети"); } }
 });
 function buildFoot(){ document.getElementById("footOrgs").innerHTML=DATA.orgs.map(o=>`<a href="#/org/${o.id}">${esc(o.abbr)} — ${esc(o.name)}</a>`).join(""); }
 document.getElementById("lgBtn").onclick=doLogin;
